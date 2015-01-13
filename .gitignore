@@ -1,4 +1,7 @@
 .vagrant/
-output/
 output-vmware-vmx/
-
+*.nvram
+*.vmsd
+*.vmx
+*.vmxf
+*.vmdk
