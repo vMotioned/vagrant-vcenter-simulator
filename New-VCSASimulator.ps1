@@ -14,17 +14,17 @@
 .OUTPUTS
 	N/A
 .EXAMPLE
-	
+
 .NOTES
 
 	TODO:
 	[+] clean up use of variables that specify script directory; figure out a fix or mandata local dir execution
 
 	#TAG:PUBLIC
-	
-	GitHub:	 https://github.com/vN3rd
-	Twitter:  @vN3rd
-	Email:	 kevin@pinelabs.co
+
+	GitHub:	 https://github.com/vScripter
+	Twitter:  @vScripter
+	Email:	 kevin@vMotioned.com
 
 [-------------------------------------DISCLAIMER-------------------------------------]
  All script are provided as-is with no implicit
@@ -37,7 +37,7 @@
 [-------------------------------------DISCLAIMER-------------------------------------]
 
 .LINK
-	https://github.com/vN3rd
+	https://github.com/vScripter
 #>
 
 [CmdletBinding()]
@@ -49,8 +49,8 @@ param (
 	[System.String]$OVAPath
 )
 
-BEGIN {	
-	
+BEGIN {
+
 	function Get-ScriptDirectory {
 		if ($hostinvocation -ne $null) {
 			Split-Path $hostinvocation.MyCommand.path
@@ -58,11 +58,11 @@ BEGIN {
 			Split-Path $script:MyInvocation.MyCommand.Path
 		} # end if/else
 	}# end function Get-ScriptDirectory
-	
-	$ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop	
-	$scriptDirectory = Get-ScriptDirectory		
+
+	$ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop
+	$scriptDirectory = Get-ScriptDirectory
 	$jsonFileName = 'vcenter-55-simulator.json'
-	
+
 	Write-Verbose -Message 'Checking for ovftool'
 	try {
 		ovftool.exe -v | Out-Null
@@ -71,7 +71,7 @@ BEGIN {
 		Write-Warning -Message 'Exiting script'
 		Exit
 	} # end try/catch
-	
+
 	Write-Verbose -Message 'Checking for packer (this may take a few seconds)'
 	try {
 		packer.exe version | Out-Null
@@ -80,11 +80,11 @@ BEGIN {
 		Write-Warning -Message 'Exiting script'
 		Exit
 	} # end try/catch
-	
+
 } # end BEGIN block
 
 PROCESS {
-	
+
 	Write-Verbose -Message 'Starting ovftool execution'
 	$vmxOutputFile = "$scriptDirectory\build\vcsa-55-sim.vmx"
 	try {
@@ -92,18 +92,18 @@ PROCESS {
 	} catch {
 		Write-Warning -Message "ovftool error: $_"
 	}
-	
+
 	if (-not(Test-Path -LiteralPath $vmxOutputFile -Type Leaf)) {
 		Write-Warning -Message '.VMX file was not created as part of ovftool execution'
 		Write-Warning -Message 'Exiting script'
 		Exit
 	}
-	
+
 	Write-Verbose -Message 'Starting packer execution'
 	packer.exe build "$scriptDirectory\$JSONFileName"
-	
+
 } # end PROCESS block
 
 END {
-	Write-Verbose -Message 'Execution Complete!'	
+	Write-Verbose -Message 'Execution Complete!'
 } # end END block
